@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel='stylesheet' href='/manager/webserver/assets/css/style.css'>
+        <link rel='stylesheet' href='/css/style.css'>
+        <script type='text/javascript' src='/manager/webserver/assets/js/jquery.js'></script>
+        <script type='text/javascript' src='/manager/webserver/assets/js/jquery.ui.js'></script>
+    </head>
+    <body>
+
+        <h1>Atag One e-mail en wachtwoord</h1>
+        <p>Om gebruik te maken van de Atag One app hebben we je e-mail adres en wachtwoord nodig die je gebruikt bij https://portal.atag-one.com website. Je gegevens zullen opgeslagen worden op je Homey apparaat en zullen alleen gebruikt worden om in te loggen op deze portal.</p>
+
+        <fieldset>
+            <div class="field row">
+                <label for="email">e-mail</label>
+                <input id="email" type="text" value="" />
+            </div>
+            <div class="field row">
+                <label for="password">Wachtwoord</label>
+                <input id="password" type="password" value="" />
+            </div>
+
+        </fieldset>
+
+        <button class="right" onclick="saveSettings()">Save changes</button>
+
+        <script language="JavaScript">
+        function onHomeyReady(){
+            Homey.get('email', function( err, email ) {
+                document.getElementById('email').value = email;
+            });
+            Homey.ready();
+        }
+
+        function saveSettings() {
+            Homey.set('email', document.getElementById('email').value);
+            Homey.set('password',  document.getElementById('password').value);
+            alert('Je settings zijn bewaart en je kunt nu je Atag-One device toevoegen via Add Devices.');
+        }
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "retrieve_reply": {
+    "seqnr": 0,
+    "status": {
+      "device_id": "6808-1401-3107_15-02-001-048",
+      "device_status": 16385,
+      "connection_status": 23,
+      "date_time": 529275612
+    },
+    "report": {
+      "report_time": 529275612,
+      "burning_hours": 783.82,
+      "device_errors": "",
+      "boiler_errors": "",
+      "room_temp": 19.9,
+      "outside_temp": 13,
+      "dbg_outside_temp": 22.4,
+      "pcb_temp": 24.8,
+      "ch_setpoint": 0,
+      "dhw_water_temp": 36.5,
+      "ch_water_temp": 19.9,
+      "dhw_water_pres": 0,
+      "ch_water_pres": 2,
+      "ch_return_temp": 19.9,
+      "boiler_status": 516,
+      "boiler_config": 772,
+      "ch_time_to_temp": 0,
+      "shown_set_temp": 16,
+      "power_cons": 0,
+      "rssi": 50,
+      "current": -80,
+      "voltage": 3745,
+      "resets": 30,
+      "memory_allocation": 5736
+    },
+    "acc_status": 2
+  }
+}
