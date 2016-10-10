@@ -5,7 +5,7 @@ This app lets you control your ATAG-ONE thermostat using Homey! (Unofficial app)
 ## Trigger:
  - inside temperature changed
  - outside temperature changed
- - Water Temperature changed (drinking/shower water)
+ - Tap Water Temperature changed (drinking/shower water)
  - Heating changed (on / off)
  - Heating Water pressure changed
 
