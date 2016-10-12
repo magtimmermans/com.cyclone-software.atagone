@@ -120,9 +120,12 @@ var options = { method: 'POST',
 
               // corrections for temp
               report.outside_temp = report.outside_temp+body.retrieve_reply.configuration.outs_temp_offs;
-              report.room_temp = report.room_temp+body.retrieve_reply.configuration.room_temp_offs;
+
+              /* offset correction seems not needed for room temp !!??? **/
+             // report.room_temp = report.room_temp+body.retrieve_reply.configuration.room_temp_offs;
+              report.device_id = body.retrieve_reply.status.device_id;
               //console.log(body) 
-              callback(false,body.retrieve_reply);  
+              callback(false,report);  
             } else
                callback(true,null); 
           } else {
@@ -138,7 +141,7 @@ AtagOne.prototype.SetTemperature = function(tempature, callback){
     var post_data = { update_message: 
           { seqnr: 0,
             account_auth: 
-            { user_account: 'marcel@timmermans.us',
+            { user_account: '',
               mac_address:  this.mac  },
             device: null,
             status: null,

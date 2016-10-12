@@ -15,12 +15,21 @@ This app lets you control your ATAG-ONE thermostat using Homey! (Unofficial app)
  - Inside Temperature above/below
  - Outside Temperature above/below
 
+## Insight
+ - Inside temperature
+ - Outside temperature
+ - Water temperature
+ - Water pressure
+
 ## Actions
 
 Actions will be added later when device behaves stable.
 
 
 ## Change Log:
+
+### v 0.0.3
+Fix temperature measuring. Created water tap Insight
 
 ### v 0.0.2
 First BETA release

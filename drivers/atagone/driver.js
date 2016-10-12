@@ -7,7 +7,7 @@ var host = '192.168.10.222'
 
 var thermostats = {}
 var number_of_devices = 0
-var devices = [];
+var devices = {};
 
 /**
  * Driver start up, re-initialize devices
@@ -41,8 +41,8 @@ module.exports.init = function (devices_data, callback) {
 				var device = devices[args.device.id];
 
 				// If found and status is away return true
-				if (device != null && (device.data.heatInfo.report.room_temp > args.temp) && args.device.id == device.data.id) {
-					console.log("room:" + device.data.heatInfo.report.room_temp + ' args Outside:'+args.temp);
+				if (device != null && (device.report.room_temp > args.temp) && args.device.id == device.data.id) {
+					console.log("room:" + device.report.room_temp + ' args Outside:'+args.temp);
 					result = true;
 				}
 			}
@@ -58,59 +58,14 @@ module.exports.init = function (devices_data, callback) {
 				var device = devices[args.device.id];
 
 				// If found and status is away return true
-				if (device != null && (device.data.heatInfo.report.outside_temp > args.temp) && args.device.id == device.data.id) {
-					console.log("outside:" + device.data.heatInfo.report.outside_temp + ' args Outside:'+args.temp);
+				if (device != null && (device.report.outside_temp > args.temp) && args.device.id == device.data.id) {
+					console.log("outside:" + device.report.outside_temp + ' args Outside:'+args.temp);
 					result = true;
 				}
 			}
 			callback(null, result);
 		});
 
-		Homey.manager('insights').createLog( 'room_temperature', {
-			label: {
-				en: 'Inside temperature',
-				nl: 'Binnen temperatuur'
-			},
-			type: 'number',
-			units: {
-				en: 'Degrees',
-				nl: 'Graden'
-			},
-			decimals: 1,
-			chart: 'stepLine' // prefered, or default chart type. can be: line, area, stepLine, column, spline, splineArea, scatter
-		}, function callback(err , success){
-			//if( err ) return console.error(err);
-		});		
-		Homey.manager('insights').createLog( 'outside_temperature', {
-			label: {
-				en: 'Outside temperature',
-				nl: 'Buiten temperatuur'
-			},
-			type: 'number',
-			units: {
-				en: 'Degrees',
-				nl: 'Graden'
-			},
-			decimals: 1,
-			chart: 'stepLine' // prefered, or default chart type. can be: line, area, stepLine, column, spline, splineArea, scatter
-		}, function callback(err , success){
-			//if( err ) return console.error(err);
-		});	
-		Homey.manager('insights').createLog( 'water_temperature', {
-			label: {
-				en: 'Water temperature',
-				nl: 'Water temperatuur'
-			},
-			type: 'number',
-			units: {
-				en: 'Degrees',
-				nl: 'Graden'
-			},
-			decimals: 1,
-			chart: 'stepLine' // prefered, or default chart type. can be: line, area, stepLine, column, spline, splineArea, scatter
-		}, function callback(err , success){
-			//if( err ) return console.error(err);
-		});	
 
 		// when the driver starts, Homey rebooted. Initialize all previously paired devices.
 		Homey.log('----devices data----')
@@ -124,12 +79,17 @@ module.exports.init = function (devices_data, callback) {
 			Homey.log(number_of_devices)
 			devices[ device_data.id ] = {
 					data    : device_data,
+					report  : {}
 				}
 		})
-		updateState(callback)
+
+		/* update device to latest info */
+		Object.keys(devices).forEach(function (id) {
+			updateState(devices[id].data);
+  	    });
 
 		// Start listening for changes on target and measured temperature
-		startPolling();
+	 	startPolling();
 
 		// Success
 		callback(null, true);
@@ -165,7 +125,7 @@ socket.on("pair_device", function(data,callback) {
 	socket.on("list_devices", function (data, callback) {
 		//console.log('list_devices:' + data)
 
-		devices = [];	
+		var device_list = [];	
 
 		var ao = new AtagOne(host);
 
@@ -173,34 +133,105 @@ socket.on("pair_device", function(data,callback) {
 			if (!err && authorized) {
 				ao.getReport(function(err, data){
 					if (!err) {
-							//console.log('data :'+data)
-							devices.push({
+							console.log('data :'+data)
+							device_list.push({
 								data: {
-									id: data.status.device_id,
-									ip: host,
-									heatInfo : data		
+									id: data.device_id,
+									ip: host		
 								},
 								name: 'Atag One'
 							});
-							callback(null, devices);	
+							callback(null, device_list);	
 					} else 
-						callback(null, devices);	
+						callback(null, device_list);	
 				});
 			} else
-			   	callback(null, devices);	
+			   	callback(null, device_list);	
 		});
 	})
 
 	socket.on("add_device", function (device, callback) {
-	    // console.log('add_device:' + device.data.id);
-	    // console.log('report:' + device.data.heatInfo);
-		// console.log('name'+device.name);
+	     console.log('add_device:' + device);
 
-		devices.push(device);
-	
-		if (callback) callback(null, true);
+		 initDevice(device.data, function(err,data) {
+			if (!err) {
+				callback(null, true);
+			} else	
+				callback(null, false);
+		 })
 	});
 };
+
+function initDevice( device_data, callback ) {
+    console.log('Initializing ATAG ONE device');
+	console.log(device_data);
+
+	/** Create insights */
+
+	Homey.manager('insights').createLog( 'room_temperature', {
+		label: {
+			en: 'Inside temperature',
+			nl: 'Binnen temperatuur'
+		},
+		type: 'number',
+		units: {en: 'Degrees',nl: 'Graden'},
+		decimals: 1,
+		chart: 'line' // prefered, or default chart type. can be: line, area, stepLine, column, spline, splineArea, scatter
+	}, function callback(err , success){
+		if( err ) return console.error(err);
+	});		
+	Homey.manager('insights').createLog( 'outside_temperature', {
+		label: {
+			en: 'Outside temperature',
+			nl: 'Buiten temperatuur'
+		},
+		type: 'number',
+		units: {en: 'Degrees',nl: 'Graden'},
+		decimals: 1,
+		chart: 'line' // prefered, or default chart type. can be: line, area, stepLine, column, spline, splineArea, scatter
+	}, function callback(err , success){
+		if( err ) return console.error(err);
+	});	
+	Homey.manager('insights').createLog( 'water_temperature', {
+		label: {
+			en: 'Water temperature',
+			nl: 'Water temperatuur'
+		},
+		type: 'number',
+		units: {en: 'Degrees',nl: 'Graden'},
+		decimals: 1,
+		chart: 'line' // prefered, or default chart type. can be: line, area, stepLine, column, spline, splineArea, scatter
+	}, function callback(err , success){
+		if( err ) return console.error(err);
+	});	
+	Homey.manager('insights').createLog( 'water_pressure', {
+		label: {
+			en: 'Water pressure',
+			nl: 'Water druk'
+		},
+		type: 'number',
+		units: {en: 'Bar',nl: 'Bar'},
+		decimals: 1,
+		chart: 'line' // prefered, or default chart type. can be: line, area, stepLine, column, spline, splineArea, scatter
+	}, function callback(err , success){
+		if( err ) return console.error(err);
+	});	
+
+	/** Initialize device & latest report */
+	var ao = new AtagOne(device_data.ip);
+
+	ao.getReport(function(err, data){
+		if (!err) {
+			devices[ device_data.id ] = {
+				id: device_data.id,
+				data: device_data,
+				report: data
+			};
+			callback(err, true);
+		} else 
+		   callback(err, true);
+	});
+}
 
 /**
  * These represent the capabilities of the Heatmiser Neo Smart
@@ -212,22 +243,35 @@ module.exports.capabilities = {
 		get: function (device, callback) {
 			if (device instanceof Error) return callback(device);
 			
-			//  console.log('get target_temp');
-			// console.log('device:'+device.id);
-			// console.log('device:'+device.ip);
-			// console.log('device:'+device.heatInfo);
+			 console.log('get target_temp');
+			console.log('device:'+device.id);
+			console.log('device:'+device.ip);
 
-		    // send the value to Homey from cach, do not retrieve again.
-            if (typeof callback == 'function' ) {
-                callback( null, device.heatInfo.report.shown_set_temp);
-            }
+			var dev = devices[ device.id ];
+
+            if (dev) {
+				if (dev.hasOwnProperty("report")) {
+					var report=devices[ device.id ].report;
+					
+					console.log('set temp:'+report.shown_set_temp);
+
+					// send the value to Homey from cach, do not retrieve again.
+					if (typeof callback == 'function' ) {
+					callback( null, report.shown_set_temp);
+					}
+				} else 
+					/** retrieve live data instead of cache!? */
+					callback(true,null)
+			} else
+				callback(true,null);
 		},
 
 		set: function (device, temperature, callback) {
 			if (device instanceof Error) return callback(device);
 
 				console.log('set target_temp');
-				console.log('device:'+ device.heatInfo.report.shown_set_temp);
+				console.log(device);
+				// console.log('device:'+ device.report.shown_set_temp);
 
 				// Catch faulty trigger and max/min temp
 				if (!temperature) {
@@ -254,69 +298,77 @@ module.exports.capabilities = {
 	measure_temperature: {
 
 		get: function (device, callback) {
-			if (device instanceof Error) return callback(device);
-			
-			// console.log('get measure_temp');
-			// console.log('device:'+device.id);
-			// console.log('device:'+device.ip);
-			// console.log('device:'+device.heatInfo);
+			console.log('###########get measure_temp');
+			console.log('device:'+device.id);
+			console.log('device:'+device.ip);
 
-		    // send the value to Homey from cach, do not retrieve again.
-            if (typeof callback == 'function' ) {
-                callback( null, device.heatInfo.report.room_temp);
-            }
+			if (device instanceof Error) return callback(device);
+
+			var dev = devices[ device.id ];
+
+            if (dev) {
+				if (dev.hasOwnProperty("report")) {
+					var report=devices[ device.id ].report;
+					
+					console.log('set temp:'+report.shown_set_temp);
+
+					// send the value to Homey from cach, do not retrieve again.
+					if (typeof callback == 'function' ) {
+					callback( null, report.room_temp);
+					}
+				} else 
+					/** retrieve live data instead of cache!? */
+					callback(true,null)
+			} else
+				callback(true,null);
 		}
 	}
 };
 
 module.exports.deleted = function (device_data) {
-    devices.forEach(function (device) {
-        if (device_data.id == device.id) {
-            delete devices[devices.indexOf(device)];
-        }
-    });
+ 	delete devices[ device_data.id ];
 };
 
 
-function updateState(){
-    Object.keys(devices).forEach(function (id) {
-		var device = devices[id];
-		// console.log('update data:\n' + device.data.id);
-		// console.log(device.data.ip);		
-		// console.log(device.data.report);	
-		var ao = new AtagOne(devices[id].data.ip);
+function updateState(device_data){
+		console.log('update:'+device_data);
+
+		var device = devices[ device_data.id ];
+
+		var ao = new AtagOne(device_data.ip);
 		ao.getReport(function(err, data){
 			if (!err) {
-				var report = device.data.heatInfo.report;
-				var newReport = data.report
+				var report = device.report;
+				var newReport = data
 				// check room tempature
 				var temp_old = Number(report.room_temp);
             	var temp_new = Number(newReport.room_temp);
 				if ( temp_old != temp_new) {
 					// room tempature changed
 					Homey.log('room temperature difference')
-					report.room_temp=newReport.room_temp;
-					module.exports.realtime(device, 'measure_temperature', temp_new);
+				//	console.log(device.data);
+					module.exports.realtime(device_data, "measure_temperature", temp_new, function(err, success) { 
+						Homey.log('Real-time meas temp', err, success) 
+					})
 					console.log('old room temp:'+temp_old + '\tnew room temp:'+temp_new);
                 	// this will tigger the action card
 					Homey.manager('flow').trigger('inside_temp_changed', { "insidetemp": temp_new, "outsidetemp":newReport.outside_temp })
-					Homey.manager('insights').createEntry( 'room_temperature', newReport.room_temp, new Date(), function(err, success){
+					Homey.manager('insights').createEntry( 'room_temperature', temp_new, new Date(), function(err, success){
 						if( err ) return console.error(err);
 					})
 				}
-				// check outside tempature
+				// //check outside tempature
 				temp_old = Number(report.outside_temp);
             	temp_new = Number(newReport.outside_temp);
 				if ( temp_old != temp_new) {
 					// outside  tempature changed
 					Homey.log('outside temperature difference')
-					report.outside_temp=newReport.outside_temp;
 					console.log('old outside temp:'+temp_old + '\tnew outside temp:'+temp_new);
 
                 	// this will tigger the action card
 					Homey.manager('flow').trigger('outside_temp_changed', { "insidetemp": newReport.room_temp, "outsidetemp":temp_new })
 					// insight update
-					Homey.manager('insights').createEntry( 'outside_temperature', newReport.outside_temp, new Date(), function(err, success){
+					Homey.manager('insights').createEntry( 'outside_temperature', temp_new, new Date(), function(err, success){
 						if( err ) return console.error(err);
 					})
 				}
@@ -326,13 +378,13 @@ function updateState(){
 				if ( temp_old != temp_new) {
 					// outside  tempature changed
 					Homey.log('dhw_water_temp difference')
-					report.dhw_water_temp=newReport.dhw_water_temp;
+
 					console.log('old dhw_water_temp temp:'+temp_old + '\tnew dhw_water_temp temp:'+temp_new);
 
                 	// this will tigger the action card
-					Homey.manager('flow').trigger('dhw_water_temp_changed', { "temp": newReport.dhw_water_temp })
+					Homey.manager('flow').trigger('dhw_water_temp_changed', { "temp": temp_new })
 
-					Homey.manager('insights').createEntry( 'water_temperature', newReport.outside_temp, new Date(), function(err, success){
+					Homey.manager('insights').createEntry( 'water_temperature', temp_new, new Date(), function(err, success){
 						if( err ) return console.error(err);
 					})
 				}
@@ -341,13 +393,14 @@ function updateState(){
 				temp_new = Number(newReport.shown_set_temp);
 				if ( temp_old != temp_new) {
 						Homey.log('target temperature difference')
-						report.shown_set_temp=temp_new;
-						module.exports.realtime(device, 'target_temperature', temp_new);
+						module.exports.realtime(device_data, "target_temperature", temp_new, function(err, success) { 
+											Homey.log('Real-time target_temp', err, success) 
+						})
 				}
 				var heating_old = Number(report.ch_setpoint)==0;
 				var heating_new = Number(newReport.ch_setpoint)==0;
 				if ( heating_old != heating_new) {
-					if (!heating_old && heating_new) {
+					if (heating_old && !heating_new) {
 						// heating on
 						Homey.manager('flow').trigger('heating_changed', { "heating_status": true })
 					} else {
@@ -359,17 +412,16 @@ function updateState(){
 				if ( wp_old != wp_new) {
 					// water pressure changed
 					Homey.log('water pressure difference')
-					report.ch_water_pres=newReport.ch_water_pres;
-
                 	// this will tigger the action card
-					Homey.manager('flow').trigger('pressure_changed', { "pressure": newReport.ch_water_pres })
+					Homey.manager('flow').trigger('pressure_changed', { "pressure": wp_new })
+					Homey.manager('insights').createEntry( 'water_pressure', wp_new, new Date(), function(err, success){
+						if( err ) return console.error(err);
+					})
 				}
 
-
-				device.data.heatInfo=data;
+				device.report=data;
 			} 
 		});
-	})
 };
 
 
@@ -379,24 +431,20 @@ function updateState(){
  */
 function startPolling() {
 	// Poll every 5 minute
-	setInterval(function () {
 
+	setInterval(function () {
 		//Update device data
 		console.log('[AtagOne] Polling data');
-		updateState();
+		Object.keys(devices).forEach(function (id) {
+			updateState(devices[id].data);
+  	    });
 	}, 300000);
 }
 
+function randomIntInc (low, high) {
+    return Math.floor(Math.random() * (high - low + 1) + low);
+}
 
-function getDevice(device_id) {
-	if (devices.length > 0) {
-		for (var x = 0; x < devices.length; x++) {
-			if (devices[x].data.id === device_id) {
-				return devices[x];
-			}
-		}
-	}
-};
 
 
 
