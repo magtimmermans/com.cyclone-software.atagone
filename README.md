@@ -8,6 +8,7 @@ This app lets you control your ATAG-ONE thermostat using Homey! (Unofficial app)
  - Tap Water Temperature changed (drinking/shower water)
  - Heating changed (on / off)
  - Heating Water pressure changed
+ - Burning Hours changed
 
 
 ## Conditions
@@ -20,11 +21,14 @@ This app lets you control your ATAG-ONE thermostat using Homey! (Unofficial app)
  - Outside temperature
  - Water temperature
  - Water pressure
+ - Burning Hours
 
 ## Actions
 
 Actions will be added later when device behaves stable.
 
+### v 0.0.4
+Added burning hours trigger and insight
 
 ## Change Log:
 

@@ -192,39 +192,3 @@ function getMac() {
 
 module.exports = AtagOne;
 
-
-/******************** retrieve_reply 
-{ retrieve_reply:
-   { seqnr: 0,
-     status:
-      { device_id: '6808-1401-3107_15-02-001-048',
-        device_status: 16385,
-        connection_status: 23,
-        date_time: 528736465 },
-     report:
-      { report_time: 528736465,
-        burning_hours: 780.23,
-        device_errors: '',
-        boiler_errors: '',
-        room_temp: 20.9,
-        outside_temp: 14.5,
-        dbg_outside_temp: 24.5,
-        pcb_temp: 27.9,
-        ch_setpoint: 0,
-        dhw_water_temp: 64.7,
-        ch_water_temp: 21,
-        dhw_water_pres: 0,
-        ch_water_pres: 2.5,
-        ch_return_temp: 21,
-        boiler_status: 524,
-        boiler_config: 772,
-        ch_time_to_temp: 0,
-        shown_set_temp: 17,
-        power_cons: 8774,
-        rssi: 50,
-        current: 65,
-        voltage: 4100,
-        resets: 18,
-        memory_allocation: 5736 },
-     acc_status: 2 } }
-*********************************************/

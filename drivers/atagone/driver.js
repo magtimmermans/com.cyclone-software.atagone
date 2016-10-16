@@ -204,10 +204,20 @@ function initDevice( device_data, callback ) {
 	}, function callback(err , success){
 		if( err ) return console.error(err);
 	});	
+
+	// Delete a log
+	Homey.manager('insights').deleteLog('water_pressure' , function callback(err , success){
+			if( err ) return console.error(err);
+	});	
+	// Delete a log
+	Homey.manager('insights').deleteLog('burning_hours' , function callback(err , success){
+			if( err ) return console.error(err);
+	});	
+
 	Homey.manager('insights').createLog( 'water_pressure', {
 		label: {
 			en: 'Water pressure',
-			nl: 'Water druk'
+			nl: 'Waterdruk'
 		},
 		type: 'number',
 		units: {en: 'Bar',nl: 'Bar'},
@@ -217,6 +227,18 @@ function initDevice( device_data, callback ) {
 		if( err ) return console.error(err);
 	});	
 
+	Homey.manager('insights').createLog( 'burning_hours', {
+		label: {
+			en: 'Burning hours',
+			nl: 'Branduren'
+		},
+		type: 'number',
+		units: {en: 'Hours',nl: 'Uren'},
+		decimals: 1,
+		chart: 'line' // prefered, or default chart type. can be: line, area, stepLine, column, spline, splineArea, scatter
+	}, function callback(err , success){
+		if( err ) return console.error(err);
+	});	
 	/** Initialize device & latest report */
 	var ao = new AtagOne(device_data.ip);
 
@@ -418,7 +440,17 @@ function updateState(device_data){
 						if( err ) return console.error(err);
 					})
 				}
-
+				var bh_old = Number(report.burning_hours);
+				var bh_new = Number(newReport.burning_hours);
+				if ( bh_old != bh_new) {
+					// water pressure changed
+					Homey.log('Burning Hours difference')
+                	// this will tigger the action card
+					Homey.manager('flow').trigger('burning_hours_changed', { "pressure": wp_new })
+					Homey.manager('insights').createEntry( 'burning_hours', bh_new, new Date(), function(err, success){
+						if( err ) return console.error(err);
+					})
+				}
 				device.report=data;
 			} 
 		});
