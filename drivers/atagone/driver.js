@@ -239,6 +239,32 @@ function initDevice( device_data, callback ) {
 	}, function callback(err , success){
 		if( err ) return console.error(err);
 	});	
+
+	Homey.manager('insights').createLog( 'heating_water_temp', {
+		label: {
+			en: 'Heating Water Temperature',
+			nl: 'Temperatuur cv-water'
+		},
+		type: 'number',
+		units: {en: 'Degrees',nl: 'Graden'},
+		decimals: 1,
+		chart: 'line' // prefered, or default chart type. can be: line, area, stepLine, column, spline, splineArea, scatter
+	}, function callback(err , success){
+		if( err ) return console.error(err);
+	});	
+	Homey.manager('insights').createLog( 'heating_return_water_temp', {
+		label: {
+			en: 'Heating return Water Temperature',
+			nl: 'Temperatuur cv-retour-water'
+		},
+		type: 'number',
+		units: {en: 'Degrees',nl: 'Graden'},
+		decimals: 1,
+		chart: 'line' // prefered, or default chart type. can be: line, area, stepLine, column, spline, splineArea, scatter
+	}, function callback(err , success){
+		if( err ) return console.error(err);
+	});	
+
 	/** Initialize device & latest report */
 	var ao = new AtagOne(device_data.ip);
 
@@ -448,6 +474,28 @@ function updateState(device_data){
                 	// this will tigger the action card
 					Homey.manager('flow').trigger('burning_hours_changed', { "pressure": wp_new })
 					Homey.manager('insights').createEntry( 'burning_hours', bh_new, new Date(), function(err, success){
+						if( err ) return console.error(err);
+					})
+				}
+				var cvw_old = Number(report.ch_water_temp);
+				var cvw_new = Number(newReport.ch_water_temp);
+				if ( cvw_old != cvw_new) {
+					// water pressure changed
+					Homey.log('ch_water_temp difference')
+                	// this will tigger the action card
+					Homey.manager('flow').trigger('heatingwater_temp_changed', { "temp": cvw_new })
+					Homey.manager('insights').createEntry( 'heating_water_temp', cvw_new, new Date(), function(err, success){
+						if( err ) return console.error(err);
+					})
+				}
+				var cvrw_old = Number(report.ch_return_temp);
+				var cvrw_new = Number(newReport.ch_return_temp);
+				if ( cvrw_old != cvrw_new) {
+					// water pressure changed
+					Homey.log('ch_return_temp difference')
+                	// this will tigger the action card
+					Homey.manager('flow').trigger('heatingreturnwater_temp_changed', { "temp": cvrw_new })
+					Homey.manager('insights').createEntry( 'heating_return_water_temp', cvrw_new, new Date(), function(err, success){
 						if( err ) return console.error(err);
 					})
 				}
