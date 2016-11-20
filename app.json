@@ -9,7 +9,7 @@
         "nl": "Laat Homey je Atag One thermostaat besturen door middel van deze app!"
     },
     "category": "climate",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "compatibility": "0.x || 1.x",
     "author": {
         "name": "Marcel Timmermans",
@@ -19,241 +19,372 @@
         "large": "assets/images/large.jpg",
         "small": "assets/images/small.jpg"
     },
-    "permissions": [
-    ],
+    "permissions": [],
     "speech": [
 
     ],
-    "drivers": [
-        {
-            "id": "atagone",
-            "name": {
-                "en": "Atag One",
-                "nl": "Atag One"
+    "capabilities": {
+        "my_water_pressure": {
+            "chartType": "spline",
+            "type": "number",
+            "title": {
+                "en": "Water Pressure",
+                "nl": "Waterdruk"
             },
-            "images": {
-                "large": "drivers/atagone/assets/images/large.jpg",
-                "small": "drivers/atagone/assets/images/small.jpg"
+            "units": {
+                "en": "Bar",
+                "nl": "Bar"
             },
-            "class": "thermostat",
-            "capabilities": [
-                "target_temperature",
-                "measure_temperature"
-              ],
-            "pair": [
+            "desc": {
+                "en": "Water Pressure of heating system",
+                "nl": "Waterdruk van het verwarmingssysteem"
+            },
+            "decimals": 2,
+            "getable": true,
+            "setable": false
+        },
+        "my_outside_temperature": {
+            "chartType": "spline",
+            "type": "number",
+            "title": {
+                "en": "Outside Temperature",
+                "nl": "Buiten Temperatuur"
+            },
+            "units": {
+                "en": "°C",
+                "nl": "°C"
+            },
+            "desc": {
+                "en": "Outside Temperature",
+                "nl": "Buiten Temperatuur"
+            },
+            "decimals": 2,
+            "getable": true,
+            "setable": false
+        },
+        "my_heatingwater_temp": {
+            "chartType": "spline",
+            "type": "number",
+            "title": {
+                "en": "Heating water Temperature",
+                "nl": "Temperatuur CV-Water"
+            },
+            "units": {
+                "en": "°C",
+                "nl": "°C"
+            },
+            "desc": {
+                "en": "Heating water Temperature",
+                "nl": "Temperatuur CV-Water"
+            },
+            "decimals": 2,
+            "getable": true,
+            "setable": false
+        },
+        "my_heatingreturnwater_temp": {
+            "chartType": "spline",
+            "type": "number",
+            "title": {
+                "en": "Heating return water Temperature",
+                "nl": "Temperatuur CV-Retour-Water"
+            },
+            "units": {
+                "en": "°C",
+                "nl": "°C"
+            },
+            "desc": {
+                "en": "Heating return water Temperature",
+                "nl": "Temperatuur CV-Retour-Water"
+            },
+            "decimals": 2,
+            "getable": true,
+            "setable": false
+        },
+        "my_water_temp": {
+            "chartType": "spline",
+            "type": "number",
+            "title": {
+                "en": "Water Temperature",
+                "nl": "Temperatuur Water"
+            },
+            "units": {
+                "en": "°C",
+                "nl": "°C"
+            },
+            "desc": {
+                "en": "Water Temperature",
+                "nl": "Temperatuur Water"
+            },
+            "decimals": 2,
+            "getable": true,
+            "setable": false
+        },
+        "my_burning_hours": {
+            "chartType": "spline",
+            "type": "number",
+            "title": {
+                "en": "Burning hours",
+                "nl": "Branduren"
+            },
+            "units": {
+                "en": "Hours",
+                "nl": "Uren"
+            },
+            "desc": {
+                "en": "Burning hours",
+                "nl": "Branduren"
+            },
+            "decimals": 0,
+            "getable": true,
+            "setable": false
+        }
+    },
+    "drivers": [{
+        "id": "atagone",
+        "mobile": {
+            "components": [{
+                    "id": "icon",
+                    "capabilities": []
+                },
                 {
-                    "id":"pair"
-                },                
-                {
-                    "id": "list_thermostats",
-                    "template": "list_devices",
-                    "navigation": {
-                        "next": "add_thermostats"
+                    "id": "sensor",
+                    "capabilities": [
+                        "my_water_pressure",
+                        "measure_temperature",
+                        "my_outside_temperature",
+                        "my_heatingwater_temp",
+                        "my_heatingreturnwater_temp",
+                        "my_burning_hours",
+                        "my_water_temp"
+                    ],
+                    "options": {
+                        "icons": {
+                            "my_water_pressure": "./assets/download.svg",
+                            "my_outside_temperature": "./assets/temperature.svg",
+                            "my_heatingwater_temp": "./assets/temperature.svg",
+                            "my_heatingreturnwater_temp": "./assets/temperature.svg",
+                            "my_water_temp": "./assets/temperature.svg",
+                            "my_burning_hours": "./assets/flame.svg"
+                        }
                     }
                 },
                 {
-                    "id": "add_thermostats",
-                    "template": "add_devices"
+                    "id": "thermostat",
+                    "capabilities": ["target_temperature"]
                 }
             ]
-        }
-    ],
+        },
+        "name": {
+            "en": "Atag One",
+            "nl": "Atag One"
+        },
+        "images": {
+            "large": "drivers/atagone/assets/images/large.jpg",
+            "small": "drivers/atagone/assets/images/small.jpg"
+        },
+        "class": "thermostat",
+        "capabilities": [
+            "target_temperature",
+            "measure_temperature",
+            "my_water_pressure",
+            "my_outside_temperature",
+            "my_heatingwater_temp",
+            "my_heatingreturnwater_temp",
+            "my_burning_hours",
+            "my_water_temp"
+        ],
+        "pair": [{
+                "id": "pair"
+            },
+            {
+                "id": "list_thermostats",
+                "template": "list_devices",
+                "navigation": {
+                    "next": "add_thermostats"
+                }
+            },
+            {
+                "id": "add_thermostats",
+                "template": "add_devices"
+            }
+        ]
+    }],
     "flow": {
-            "triggers": [
-                 {
-                    "id": "inside_temp_changed",
-                    "title": {
+        "triggers": [{
+                "id": "inside_temp_changed",
+                "title": {
                     "en": "Inside Temperature is changed",
                     "nl": "Binnen Temperatuur is verandered"
-                    },
-                    "tokens": [
-                    {
+                },
+                "tokens": [{
                         "name": "insidetemp",
                         "title": {
-                        "en": "Inside Temperature",
-                        "nl": "Binnen Temperatuur"
+                            "en": "Inside Temperature",
+                            "nl": "Binnen Temperatuur"
                         }
                     },
-                     {
+                    {
                         "name": "outsidetemp",
                         "title": {
-                        "en": "Outside Temperature",
-                        "nl": "Buiten Temperatuur"
+                            "en": "Outside Temperature",
+                            "nl": "Buiten Temperatuur"
                         }
-                    }                   
-                    ]
-                 },
-                 {
-                    "id": "outside_temp_changed",
-                    "title": {
+                    }
+                ]
+            },
+            {
+                "id": "outside_temp_changed",
+                "title": {
                     "en": "Outside Temperature is changed",
                     "nl": "Buiten Temperatuur is verandered"
-                    },
-                    "tokens": [
-                    {
+                },
+                "tokens": [{
                         "name": "insidetemp",
                         "title": {
-                        "en": "Inside Temperature",
-                        "nl": "Binnen Temperatuur"
+                            "en": "Inside Temperature",
+                            "nl": "Binnen Temperatuur"
                         }
                     },
-                     {
+                    {
                         "name": "outsidetemp",
                         "title": {
-                        "en": "Outside Temperature",
-                        "nl": "Buiten Temperatuur"
+                            "en": "Outside Temperature",
+                            "nl": "Buiten Temperatuur"
                         }
-                    }                   
-                    ]
-                 },
-                 {
-                    "id": "dhw_water_temp_changed",
-                    "title": {
+                    }
+                ]
+            },
+            {
+                "id": "dhw_water_temp_changed",
+                "title": {
                     "en": "Water Temperature is changed",
                     "nl": "Water Temperatuur is verandered"
-                    },
-                    "tokens": [
-                    {
-                        "name": "temp",
-                        "title": {
+                },
+                "tokens": [{
+                    "name": "temp",
+                    "title": {
                         "en": "Water Temperature",
                         "nl": "Water Temperatuur"
-                        }
-                    }                  
-                    ]
-                 },                 {
-                    "id": "heating_changed",
-                    "title": {
+                    }
+                }]
+            }, {
+                "id": "heating_changed",
+                "title": {
                     "en": "Heating is changed",
                     "nl": "Verwarming status"
-                    },
-                    "tokens": [
-                    {
-                        "name": "heating_status",
-                        "title": {
+                },
+                "tokens": [{
+                    "name": "heating_status",
+                    "title": {
                         "en": "Heating status",
                         "nl": "Verwarming status"
-                        }
-                    }                  
-                    ]
-                 },
-                 {
-                    "id": "pressure_changed",
-                    "title": {
+                    }
+                }]
+            },
+            {
+                "id": "pressure_changed",
+                "title": {
                     "en": "heating water pressure changed",
                     "nl": "Waterdruk verwarmings ketel veranderd"
-                    },
-                    "tokens": [
-                    {
-                        "name": "pressure",
-                        "title": {
+                },
+                "tokens": [{
+                    "name": "pressure",
+                    "title": {
                         "en": "Water Pressure",
                         "nl": "Waterdruk"
-                        }
-                    }                  
-                    ]
-                 },
-                 {
-                    "id": "burning_hours_changed",
-                    "title": {
+                    }
+                }]
+            },
+            {
+                "id": "burning_hours_changed",
+                "title": {
                     "en": "Burning hours changed",
                     "nl": "Branduren veranderd"
-                    },
-                    "tokens": [
-                    {
-                        "name": "Burning Hours",
-                        "title": {
+                },
+                "tokens": [{
+                    "name": "Burning Hours",
+                    "title": {
                         "en": "Burning Hours",
                         "nl": "Branduren"
-                        }
-                    }                  
-                    ]
-                 },
-                 {
-                    "id": "heatingwater_temp_changed",
-                    "title": {
+                    }
+                }]
+            },
+            {
+                "id": "heatingwater_temp_changed",
+                "title": {
                     "en": "Heating water temperature changed",
                     "nl": "CV-Water Temperatuur is verandered"
-                    },
-                    "tokens": [
-                    {
-                        "name": "temp",
-                        "title": {
+                },
+                "tokens": [{
+                    "name": "temp",
+                    "title": {
                         "en": "Heating water Temperature",
                         "nl": "Temperatuur CV-Water"
-                        }
-                    }]                
-                 },
-                 {
-                    "id": "heatingreturnwater_temp_changed",
-                    "title": {
+                    }
+                }]
+            },
+            {
+                "id": "heatingreturnwater_temp_changed",
+                "title": {
                     "en": "Heating return-water temperature changed",
                     "nl": "CV-Retour-Water Temperatuur is verandered"
-                    },
-                    "tokens": [
-                    {
-                        "name": "temp",
-                        "title": {
+                },
+                "tokens": [{
+                    "name": "temp",
+                    "title": {
                         "en": "Heating return water Temperature",
                         "nl": "Temperatuur CV-Retour-Water"
-                        }
-                    }]                
-                 }
-            ],
-            "conditions": [
-            {
+                    }
+                }]
+            }
+        ],
+        "conditions": [{
                 "id": "temp_above",
                 "title": {
-                "en": "Temperature !{{is|isn't}} above",
-                "nl": "Temperatuur is !{{hoger|lager}} dan"
+                    "en": "Temperature !{{is|isn't}} above",
+                    "nl": "Temperatuur is !{{hoger|lager}} dan"
                 },
-                "args":
-                [
-                {
-                    "name": "temp",
-                    "type": "number",
-                    "min" : "4",
-                    "max" : "30",
-                    "step": "0.1",
-                    "placeholder" :
+                "args": [{
+                        "name": "temp",
+                        "type": "number",
+                        "min": "4",
+                        "max": "30",
+                        "step": "0.1",
+                        "placeholder": {
+                            "en": "degrees celsius",
+                            "nl": "graden celsius"
+                        }
+                    },
                     {
-                    "en": "degrees celsius",
-                    "nl": "graden celsius"
+                        "name": "device",
+                        "type": "device"
                     }
-                },
-                {
-                    "name": "device",
-                    "type": "device"
-                }                
                 ]
             },
             {
                 "id": "buitentemp_above",
                 "title": {
-                "en": "Outside temperature !{{is|isn't}} above",
-                "nl": "Buiten temperatuur is !{{hoger|lager}} dan"
+                    "en": "Outside temperature !{{is|isn't}} above",
+                    "nl": "Buiten temperatuur is !{{hoger|lager}} dan"
                 },
-                "args":
-                [
-                {
-                    "name": "temp",
-                    "type": "number",
-                    "min" : "-20",
-                    "max" : "50",
-                    "step": "0.1",
-                    "placeholder" :
+                "args": [{
+                        "name": "temp",
+                        "type": "number",
+                        "min": "-20",
+                        "max": "50",
+                        "step": "0.1",
+                        "placeholder": {
+                            "en": "degrees celsius",
+                            "nl": "graden celsius"
+                        }
+                    },
                     {
-                    "en": "degrees celsius",
-                    "nl": "graden celsius"
+                        "name": "device",
+                        "type": "device"
                     }
-                },
-                {
-                    "name": "device",
-                    "type": "device"
-                }                
                 ]
-            }            
-         ]
+            }
+        ]
     }
 
 }
