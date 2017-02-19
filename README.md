@@ -23,6 +23,9 @@ This app lets you control your ATAG-ONE thermostat using Homey! (Unofficial app)
 
 Actions will be added later when device behaves stable.
 
+### v.0.07
+Add insight log for difference between Heating water temperature-return Heating Temperature
+
 ### v.0.06
 Remove all insights and made capabilities which have automatic insight graphics. Added authorization fix for Firmware R46 (Thanks to Rob Juurlink).
 Make sure you remove the device and add it again. For some reason the capabilities are not seen correctly if you won't

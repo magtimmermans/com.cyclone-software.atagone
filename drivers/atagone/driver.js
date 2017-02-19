@@ -19,32 +19,46 @@ var devices = {};
 module.exports.init = function(devices_data, callback) {
 
 
-	// Delete old log
-	Homey.manager('insights').deleteLog('water_pressure' , function callback(err , success){
-		//	if( err ) return console.error(err);
-	});	
-	Homey.manager('insights').deleteLog('heating_water_temp' , function callback(err , success){
-		//	if( err ) return console.error(err);
-	});	
-	Homey.manager('insights').deleteLog('heating_return_water_temp' , function callback(err , success){
-		//	if( err ) return console.error(err);
-	});	
-	Homey.manager('insights').deleteLog('room_temperature' , function callback(err , success){
-		//	if( err ) return console.error(err);
-	});	
-	Homey.manager('insights').deleteLog('outside_temperature' , function callback(err , success){
-		//	if( err ) return console.error(err);
-	});	
-	Homey.manager('insights').deleteLog('water_temperature' , function callback(err , success){
-		//	if( err ) return console.error(err);
-	});	
-	Homey.manager('insights').deleteLog('burning_hours' , function callback(err , success){
-		//	if( err ) return console.error(err);
-	});	
-	Homey.manager('insights').deleteLog('water_pressure' , function callback(err , success){
-		//	if( err ) return console.error(err);
-	});	
-   
+    // Delete old log
+    Homey.manager('insights').deleteLog('water_pressure', function callback(err, success) {
+        //	if( err ) return console.error(err);
+    });
+    Homey.manager('insights').deleteLog('heating_water_temp', function callback(err, success) {
+        //	if( err ) return console.error(err);
+    });
+    Homey.manager('insights').deleteLog('heating_return_water_temp', function callback(err, success) {
+        //	if( err ) return console.error(err);
+    });
+    Homey.manager('insights').deleteLog('room_temperature', function callback(err, success) {
+        //	if( err ) return console.error(err);
+    });
+    Homey.manager('insights').deleteLog('outside_temperature', function callback(err, success) {
+        //	if( err ) return console.error(err);
+    });
+    Homey.manager('insights').deleteLog('water_temperature', function callback(err, success) {
+        //	if( err ) return console.error(err);
+    });
+    Homey.manager('insights').deleteLog('burning_hours', function callback(err, success) {
+        //	if( err ) return console.error(err);
+    });
+    Homey.manager('insights').deleteLog('water_pressure', function callback(err, success) {
+        //	if( err ) return console.error(err);
+    });
+
+    Homey.manager('insights').createLog('DeltaT', {
+        label: {
+            en: 'DeltaT '
+        },
+        type: 'number',
+        units: {
+            en: '°C'
+        },
+        decimals: 2,
+        chart: 'line' // prefered, or default chart type. can be: line, area, stepLine, column, spline, splineArea, scatter
+    }, function callback(err, success) {
+        if (err) return console.error(err);
+    });
+
 
     Homey.manager('flow').on('trigger.inside_temp_changed', function(callback, args) {
         Homey.log('trigger.inside_temp_changed started')
@@ -594,6 +608,13 @@ function updateState(device_data, forceUpdate) {
                     // this will tigger the action card
                 Homey.manager('flow').trigger('heatingreturnwater_temp_changed', { "temp": cvrw_new })
             }
+            // difference water_temp-return_temp
+            Homey.manager('insights').createEntry('DeltaT', parseFloat(cvw_new - cvrw_new), new Date(), function(err, success) {
+                if (err) {
+                    Homey.log(Homey.error(err)); //return Homey.error(err);
+                };
+            });
+
             device.report = data;
         }
     });
