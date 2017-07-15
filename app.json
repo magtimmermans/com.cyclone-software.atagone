@@ -9,7 +9,7 @@
         "nl": "Laat Homey je Atag One thermostaat besturen door middel van deze app!"
     },
     "category": "climate",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "compatibility": "1.x",
     "author": {
         "name": "Marcel Timmermans",

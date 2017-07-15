@@ -114,11 +114,13 @@ AtagOne.prototype.getReport = function(callback) {
         }
     }
 
+    console.log(JSON.stringify(post_data));
+
     var options = {
         method: 'POST',
         url: 'http://' + this.ip + ':' + port + '/retrieve_message',
         headers: {
-            'Content-Length': Buffer.byteLength(post_data),
+            'Content-Length': Buffer.byteLength(JSON.stringify(post_data)),
             'cache-control': 'no-cache',
             'content-type': 'application/json'
         },
