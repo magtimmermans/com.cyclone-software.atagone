@@ -23,8 +23,11 @@ This app lets you control your ATAG-ONE thermostat using Homey! (Unofficial app)
 
 Actions will be added later when device behaves stable.
 
+### v.0.09
+Bugfixes for homey 1.5 RC
+
 ### v.0.08
-Bugfix for homey 1.5
+Bugfix for homey 1.5 RC
 
 ### v.0.07
 Add insight log for difference between Heating water temperature-return Heating Temperature

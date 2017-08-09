@@ -80,7 +80,7 @@ AtagOne.prototype.pair = function(callback) {
         headers: {
             'cache-control': 'no-cache',
             'content-type': 'application/json',
-            'Content-Length': Buffer.byteLength(post_data),
+            'Content-Length': Buffer.byteLength(JSON.stringify(post_data)),
         },
         body: post_data,
         json: true
@@ -114,7 +114,7 @@ AtagOne.prototype.getReport = function(callback) {
         }
     }
 
-    console.log(JSON.stringify(post_data));
+    //console.log(JSON.stringify(post_data));
 
     var options = {
         method: 'POST',
@@ -176,7 +176,7 @@ AtagOne.prototype.SetTemperature = function(tempature, callback) {
         method: 'POST',
         url: 'http://' + this.ip + ':' + port + '/update',
         headers: {
-            'Content-Length': Buffer.byteLength(post_data),
+            'Content-Length': Buffer.byteLength(JSON.stringify(post_data)),
             'cache-control': 'no-cache',
             'content-type': 'application/json'
         },
