@@ -9,8 +9,8 @@
         "nl": "Laat Homey je Atag One thermostaat besturen door middel van deze app!"
     },
     "category": "climate",
-    "version": "0.0.9",
-    "compatibility": "1.x",
+    "version": "0.1.0",
+    "compatibility": "1.x >=1.5.0",
     "author": {
         "name": "Marcel Timmermans",
         "email": "marcel@timmermans.us"
@@ -384,6 +384,29 @@
                     }
                 ]
             }
+        ],
+        "actions": [{
+            "id": "set_temperature",
+            "title": {
+              "en": "Set temperature by input",
+              "nl": "Stel temperatuur in"
+            },
+            "args": [
+              {
+                "type": "range",
+                "name": "temp_range",
+                "min": 4,
+                "max": 27,
+                "step": 0.5,
+                "label": "°",
+                "labelDecimals": 1
+              },
+              {
+                "name": "device",
+                "type": "device"
+              }
+            ]
+          }
         ]
     }
 

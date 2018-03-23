@@ -108,6 +108,19 @@ module.exports.init = function(devices_data, callback) {
         callback(null, result);
     });
 
+    Homey.manager('flow').on('action.set_temperature', function (callback, args) {
+        var new_target = Number(Math.round(args.temp_range * 2) / 2).toFixed(1)
+        Homey.log('device id: ' + args.device.id)
+        Homey.log('New temperature: ' + new_target)
+
+        var ao = new AtagOne(devices[args.device.id].data.ip);
+        ao.SetTemperature(new_target, function(err, errData) {
+            Homey.log('Error: ' + err);
+            Homey.log('Error_Text: ' + errData);
+            if (callback) callback(null, err);
+        })
+    })
+
 
     // when the driver starts, Homey rebooted. Initialize all previously paired devices.
     Homey.log('----devices data----')
