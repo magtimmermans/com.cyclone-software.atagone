@@ -562,14 +562,20 @@ function updateState(device_data, forceUpdate) {
                     Homey.log('Real-time target_temp', err, success)
                 })
             }
-            var heating_old = Number(report.ch_setpoint) == 0;
-            var heating_new = Number(newReport.ch_setpoint) == 0;
+            var heating_old = Number(report.boiler_status&8) == 8;
+            var heating_new = Number(newReport.boiler_status&8) == 8;
+            // Homey.log(newReport.boiler_status&8);
+            // Homey.log(newReport.boiler_status&4);
+            // Homey.log(newReport.boiler_status&2);
             if (heating_old != heating_new) {
                 if (heating_old && !heating_new) {
-                    // heating on
-                    Homey.manager('flow').trigger('heating_changed', { "heating_status": true })
-                } else {
+                  
+                    //console.log('Heating off');
                     Homey.manager('flow').trigger('heating_changed', { "heating_status": false })
+                } else {
+                      // heating on
+                    //console.log('Heating on');
+                    Homey.manager('flow').trigger('heating_changed', { "heating_status": true })
                 }
             }
             var wp_old = (forceUpdate ? 0 : Number(report.ch_water_pres));

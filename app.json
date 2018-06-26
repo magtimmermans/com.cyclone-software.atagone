@@ -9,7 +9,7 @@
         "nl": "Laat Homey je Atag One thermostaat besturen door middel van deze app!"
     },
     "category": "climate",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "compatibility": "1.x >=1.5.0",
     "author": {
         "name": "Marcel Timmermans",
@@ -271,7 +271,7 @@
                 "id": "heating_changed",
                 "title": {
                     "en": "Heating is changed",
-                    "nl": "Verwarming status"
+                    "nl": "Verwarming status is veranderd"
                 },
                 "tokens": [{
                     "name": "heating_status",

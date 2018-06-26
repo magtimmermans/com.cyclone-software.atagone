@@ -23,6 +23,8 @@ This app lets you control your ATAG-ONE thermostat using Homey! (Unofficial app)
 
  - Set Temperature on desired value
 
+### v.0.11
+Bug fix heating status and text correction
 
 ### v.0.10
 Add action card to set temperature
