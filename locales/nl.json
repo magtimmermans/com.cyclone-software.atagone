@@ -1,2 +1,6 @@
 {
+    "device" : {
+        "connecting" : "Verbinden met ATAG One",
+        "sync_error" : "Error syncing"
+    }
 }

@@ -54,7 +54,7 @@ AtagOne.prototype.FindDev = function(callback) {
 
 AtagOne.prototype.pair = function(callback) {
 
-    Homey.log('asking authorization');
+    console.log('asking authorization');
 
     var post_data = {
         pair_message: {
@@ -102,7 +102,7 @@ AtagOne.prototype.pair = function(callback) {
     });
 }
 
-AtagOne.prototype.getReport = function(callback) {
+AtagOne.prototype.getReport = function() {
     var post_data = {
         retrieve_message: {
             seqnr: 0,
@@ -128,35 +128,37 @@ AtagOne.prototype.getReport = function(callback) {
         json: true
     };
 
-    request(options, function(error, response, body) {
-        if (!error && response.statusCode == 200) {
-            // console.log(body) //result
-            if (body) {
-                if (body.retrieve_reply.acc_status == 2) {
-                    /* authorized */
+    return new Promise(function(resolve, reject) {
+            request(options, function(error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    // console.log(body) //result
+                    if (body) {
+                        if (body.retrieve_reply.acc_status == 2) {
+                            /* authorized */
 
-                    var report = body.retrieve_reply.report;
+                            var report = body.retrieve_reply.report;
 
-                    // corrections for temp
-                    report.outside_temp = report.outside_temp + body.retrieve_reply.configuration.outs_temp_offs;
+                            // corrections for temp
+                            report.outside_temp = report.outside_temp + body.retrieve_reply.configuration.outs_temp_offs;
 
-                    /* offset correction seems not needed for room temp !!??? **/
-                    // report.room_temp = report.room_temp+body.retrieve_reply.configuration.room_temp_offs;
-                    report.device_id = body.retrieve_reply.status.device_id;
-                    //console.log(body) 
-                    callback(false, report);
-                } else
-                    callback(true, null);
-            } else {
-                callback(true, null);
-            }
-        } else {
-            callback(true, 'cannot connect to AtagOne (check ip address)');
-        }
-    });
+                            /* offset correction seems not needed for room temp !!??? **/
+                            // report.room_temp = report.room_temp+body.retrieve_reply.configuration.room_temp_offs;
+                            report.device_id = body.retrieve_reply.status.device_id;
+                            //console.log(body)
+                            resolve(report);
+                        } else
+                            reject("incorrect status")
+                    } else {
+                        reject("empty result from ATAG-One")
+                    }
+                } else {
+                    reject('cannot connect to AtagOne (check ip address)');
+                }
+            });
+      })
 }
 
-AtagOne.prototype.SetTemperature = function(tempature, callback) {
+AtagOne.prototype.SetTemperature = function(tempature) {
     var post_data = {
         update_message: {
             seqnr: 0,
@@ -184,21 +186,23 @@ AtagOne.prototype.SetTemperature = function(tempature, callback) {
         json: true
     };
 
-    request(options, function(error, response, body) {
-        if (!error && response.statusCode == 200) {
-            // console.log(body) //result
-            if (body) {
-                if (body.update_reply.acc_status == 2) {
-                    /* authorized */
-                    callback(false, null);
-                } else
-                    callback(true, 'No Access');
+    return new Promise(function(resolve, reject) {
+        request(options, function(error, response, body) {
+            if (!error && response.statusCode == 200) {
+                // console.log(body) //result
+                if (body) {
+                    if (body.update_reply.acc_status == 2) {
+                        /* authorized */
+                        resolve();
+                    } else
+                    reject('No Access');
+                } else {
+                    reject('Empty body');
+                }
             } else {
-                callback(true, 'Empty body');
+                reject('cannot connect to AtagOne (check ip address)');
             }
-        } else {
-            callback(true, 'cannot connect to AtagOne (check ip address)');
-        }
+        });
     });
 }
 

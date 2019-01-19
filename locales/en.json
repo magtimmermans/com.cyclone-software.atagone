@@ -1,2 +1,6 @@
 {
+    "device" : {
+        "connecting" : "Connecting to ATAG One",
+        "sync_error" : "Error during sync"
+    }
 }

@@ -1,10 +1,11 @@
-"use strict";
+const Homey = require('homey');
 
-function init() {
-	
-//	Homey.log("Hello world!");
-
-	
+class AtagOneApp extends Homey.App {
+  
+  onInit() {
+    this.log(`${ Homey.manifest.id } V${Homey.manifest.version} is running...`);
+  }
+  
 }
 
-module.exports.init = init;
+module.exports = AtagOneApp; 
