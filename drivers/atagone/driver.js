@@ -4,6 +4,8 @@ const Homey = require('homey');
 const request = require('request');
 const AtagOne = require('./atagone');
 
+var host = ''
+
 class AtagOneDriver extends Homey.Driver {
 
     onInit() { 
@@ -40,35 +42,62 @@ class AtagOneDriver extends Homey.Driver {
          }
       }
 
-    // onPair(socket) {
-    //     console.log('onPair');
-    // }
+    onPair(socket) {
+        console.log('onPair');
 
-    onPairListDevices( data, callback ) {
-        this.log("list devices");
+        socket.on("search_devices", function(data, callback) {
 
-        var devices = [];
-
-        var ao = new AtagOne(host);
-
-        ao.FindDev(function(err, atags) {
-         
-            if (!err) {
-                atags.forEach(dev => {
-                    console.log(dev);
-                    devices.push({
-                        data: {
-                            id: dev.devid,
-                            ip: dev.ip
-                        },
-                        name: 'Atag One'
-                    });                        
-                });
-                callback( null, devices );
-            } 
-            callback(true,"No devices found");           
+            var ao = new AtagOne(null);
+            ao.FindDev(function(err, data) {
+                if (!err) {
+                    callback(null, data[0]); /// only first device, I assume people has no 2 ATAG Ones :)
+                }
+            });
         })
+        socket.on("pair_device", function(data, callback) {
+            if (data) {
+                var ao = new AtagOne(data);
+                ao.pair(function(err, authorized) {
+                    host = data;
+                    callback(err, authorized);
+                });
+            } else
+                callback(true, 'no ip-address found');
+        })
+    
+    
+        socket.on("list_devices", function(data, callback) {
+            var devices = [];
+
+            var ao = new AtagOne(host);
+    
+            ao.FindDev(function(err, atags) {
+             
+                if (!err) {
+                    atags.forEach(dev => {
+                        console.log(dev);
+                        devices.push({
+                            data: {
+                                id: dev.devid,
+                                ip: dev.ip
+                            },
+                            name: 'Atag One'
+                        });                        
+                    });
+                    callback( null, devices );
+                } 
+                callback(true,"No devices found");           
+            })
+        })
+    
+        socket.on("add_device", function(device, callback) {
+            console.log('add_device:' + device);
+        });
+
+
+
     }
+
 }
 
 

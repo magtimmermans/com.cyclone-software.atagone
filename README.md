@@ -23,6 +23,9 @@ This app lets you control your ATAG-ONE thermostat using Homey! (Unofficial app)
 
  - Set Temperature on desired value
 
+### v0.5.1
+Fixed (I hope) paring process.
+
 ### v0.5.0
 Complete rewrite for the ATAG One app for Homey 2.0. Thanks to Robert Klep which wrote the Nefit app and I used this as an example, as I found this very nice and clean written. It's the best to delete your device and re-add it as you will get then more capabilities.
 
