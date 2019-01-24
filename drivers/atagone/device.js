@@ -120,7 +120,7 @@ class AtagOneDevice extends Homey.Device {
         // Schedule next sync.
         this.timeout = setTimeout(
           () => this.sync(),
-           300000
+           120000
         );
     }
 

@@ -12,7 +12,7 @@
     "category": "climate",
     "brandColor": "#E8461D",
     "homeyCommunityTopicId": 7005,
-    "version": "0.5.1",
+    "version": "0.5.2",
     "compatibility": ">=2.0.0",
     "contributing": {
         "donate": {
@@ -36,6 +36,7 @@
     "capabilities": {
         "my_water_pressure": {
             "chartType": "spline",
+            "insights": true,
             "type": "number",
             "uiComponent": "sensor",
             "title": {
@@ -57,6 +58,7 @@
         },
         "my_outside_temperature": {
             "chartType": "spline",
+            "insights": true,
             "uiComponent": "sensor",
             "type": "number",
             "title": {
@@ -79,6 +81,7 @@
         "my_heatingwater_temp": {
             "chartType": "spline",
             "uiComponent": "sensor",
+            "insights": true,
             "type": "number",
             "title": {
                 "en": "Heating water Temperature",
@@ -100,6 +103,7 @@
         "my_heatingreturnwater_temp": {
             "chartType": "spline",
             "uiComponent": "sensor",
+            "insights": true,
             "type": "number",
             "title": {
                 "en": "Heating return water Temperature",
@@ -120,6 +124,7 @@
         },
         "my_water_temp": {
             "chartType": "spline",
+            "insights": true,
             "uiComponent": "sensor",
             "type": "number",
             "title": {
@@ -141,6 +146,7 @@
         },
         "my_burning_hours": {
             "chartType": "spline",
+            "insights": true,
             "uiComponent": "sensor",
             "type": "number",
             "title": {
@@ -169,6 +175,9 @@
             },
             "getable": true,
             "setable": true,
+            "insights": true,
+            "insightsTitleTrue": { "en": "On" },
+            "insightsTitleFalse": { "en": "Off" },
             "icon": "assets/central_heating.svg"
         }
     },
