@@ -4,15 +4,14 @@
 const Homey = require('homey');
 const request = require('request');
 const AtagOne = require('./atagone');
+const MINUTE = 60000;
 
 const formatValue   = t => Math.round(t.toFixed(1) * 10) / 10
 
 class AtagOneDevice extends Homey.Device {
 
     async onInit() {
-        var name=this.getName();
-        console.log(name);
-        this.log(`Init device ${name}`);
+        this.log(`Init device ${this.getName()}`);
  
         var data = this.getData();
         console.log(data);
@@ -113,14 +112,16 @@ class AtagOneDevice extends Homey.Device {
           await this.setAvailable(); // We could update so the device is available.
         } catch(e) {
           this.log('error syncing', e);
+          this.log(this.aoDev.deviceIP);
           await this.setUnavailable(Homey.__('device.sync_error') + ': ' + e.message);
         }
         this.isSyncing = false;
-    
+        this.log("ready sync");
+
         // Schedule next sync.
         this.timeout = setTimeout(
           () => this.sync(),
-           120000
+            5*MINUTE
         );
     }
 

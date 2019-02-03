@@ -2,5 +2,10 @@
     "device" : {
         "connecting" : "Connecting to ATAG One",
         "sync_error" : "Error during sync"
+    },
+    "settings": {
+        "logTitle":"Logging",
+        "deletelogs" : "Delete logs",
+        "getlogs" : "Get logs"
     }
 }

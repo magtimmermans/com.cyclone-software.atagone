@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- The '/homey.js' script must be included in your settings view to work -->
+        <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script type="text/javascript" src="settings.js" data-origin="settings"></script>
+        <style>
+            #loglines  {
+                font-size: 12px;
+            }
+        </style>
+    </head>
+    <body>
+       <h1 data-i18n="settings.logTitle"></h1>
+
+        <button type="button" id="button_deletelog" onclick="deleteLogs()" data-i18n="settings.deletelogs">Delete Logs</button>
+        <button type="button" id="button_getlog" onclick="showLogs()" data-i18n="settings.getlogs">Get Logs</button>
+        <div id="loglines"></div>
+    </body>
+</html>
