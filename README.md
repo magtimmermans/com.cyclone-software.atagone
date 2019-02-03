@@ -23,6 +23,10 @@ This app lets you control your ATAG-ONE thermostat using Homey! (Unofficial app)
 
  - Set Temperature on desired value
 
+### v0.5.3
+Add logging to see what is going on. Thanks Robin de Gruijter (I have used the code from you). The logging part is developed and copyright from Robin de Gruijter.
+Syncing to 3 minutes. 2 minutes seems to get the device not responding.
+
 ### v0.5.2
 Sync more often (2 minutes) in stead of 5min and insights updates
 
