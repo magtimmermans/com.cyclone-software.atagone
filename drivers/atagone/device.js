@@ -121,7 +121,7 @@ class AtagOneDevice extends Homey.Device {
         // Schedule next sync.
         this.timeout = setTimeout(
           () => this.sync(),
-            3*MINUTE
+            5*MINUTE
         );
     }
 
@@ -144,7 +144,10 @@ class AtagOneDevice extends Homey.Device {
               this.report = report;
             } 
          ).catch(
-             error => console.log(error)
+             error => {
+                 console.log(error);
+                 return;
+             }
         );
 
         this.log('...updating status');

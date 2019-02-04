@@ -29,13 +29,13 @@ class AtagOneDriver extends Homey.Driver {
         this._conditions = {
           cndTempAbove : new Homey.FlowCardCondition('temp_above').register().registerRunListener(( args, state ) => {
             if (args.device.hasOwnProperty("report")) {
-               return Promise.resolve(args.device.report.room_temp > args.temp);
+               if (args.device.report) return Promise.resolve(args.device.report.room_temp > args.temp);
             } else 
                 return Promise.resolve(false);
           }),
           cndOutSideTempAbove : new Homey.FlowCardCondition('buitentemp_above').register().registerRunListener(( args, state ) => {
             if (args.device.hasOwnProperty("report")) {
-                return Promise.resolve(args.device.report.outside_temp > args.temp);
+                if (args.device.report) return Promise.resolve(args.device.report.outside_temp > args.temp);
             } else 
                 return Promise.resolve(false);
           }),

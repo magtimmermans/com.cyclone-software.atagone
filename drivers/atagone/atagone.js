@@ -129,6 +129,7 @@ AtagOne.prototype.getReport = function() {
     };
 
     return new Promise(function(resolve, reject) {
+        try {
             request(options, function(error, response, body) {
                 if (!error && response.statusCode == 200) {
                     // console.log(body) //result
@@ -147,14 +148,17 @@ AtagOne.prototype.getReport = function() {
                             //console.log(body)
                             resolve(report);
                         } else
-                            reject("incorrect status")
+                            reject(`incorrect status: ${body.retrieve_reply.acc_status}`);
                     } else {
-                        reject("empty result from ATAG-One")
+                        reject(`empty result from ATAG-One, response:${response.statusCode}`)
                     }
                 } else {
                     reject('cannot connect to AtagOne (check ip address)');
                 }
-            });
+            });            
+        } catch (error) {
+            reject(error);
+        }
       })
 }
 
