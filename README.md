@@ -11,6 +11,7 @@ This app lets you control your ATAG-ONE thermostat using Homey! (Unofficial app)
  - Burning Hours changed
  - Heating water temperature
  - Heating return water temperature
+ - Target Temperature changed
 
 
 ## Conditions
@@ -22,6 +23,12 @@ This app lets you control your ATAG-ONE thermostat using Homey! (Unofficial app)
 ## Actions
 
  - Set Temperature on desired value
+
+### v0.5.6
+Changed syncing mechanism
+
+### v0.5.5
+Still syncing stopped after a few days. Hopefully fixed now.
 
 ### v0.5.4
 Syncing back to 5 minutes. Seems that lower the device will not respond :( at some users. 

@@ -1,0 +1,25 @@
+{
+  "name": "com.cyclone-software.atagone",
+  "version": "1.0.0",
+  "description": "atagone",
+  "main": "app.js",
+  "dependencies": {
+    "fixture-stdout": "^0.2.1",
+    "http": "^0.0.0",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/magtimmermans/com.cyclone-software.atagone.git"
+  },
+  "author": "Marcel Timmermans",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/magtimmermans/com.cyclone-software.atagone/issues"
+  },
+  "homepage": "https://github.com/magtimmermans/com.cyclone-software.atagone#readme"
+}

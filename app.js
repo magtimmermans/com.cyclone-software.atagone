@@ -2,10 +2,10 @@ const Homey = require('homey');
 const Logger = require('./captureLogs.js');
 
 class AtagOneApp extends Homey.App {
-  
-  onInit() {
-    this.log(`${ Homey.manifest.id } V${Homey.manifest.version} is running...`);
-    this.logger = new Logger('log', 200);
+
+	onInit() {
+		this.log(`${Homey.manifest.id} V${Homey.manifest.version} is running...`);
+		this.logger = new Logger('log', 200);
 
 		// global crash handling
 		process.on('uncaughtException', (err) => {
@@ -38,7 +38,7 @@ class AtagOneApp extends Homey.App {
 	getLogs() {
 		return this.logger.logArray;
 	}
-  
+
 }
 
-module.exports = AtagOneApp; 
+module.exports = AtagOneApp;
